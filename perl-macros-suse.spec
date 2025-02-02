@@ -20,7 +20,7 @@
 Name:           perl-macros-suse
 Summary:        Perl macros for rpm build
 Version:        1.0
-Release:        3
+Release:        4
 License:        GPL
 Group:          Development/Libraries/Perl
 Source0:        macros.perl
