@@ -31,6 +31,7 @@ Provides:       perl_gen_filelist
 %if 0%{?suse_version}
 Provides:       perl-macros
 Conflicts:      perl-macros
+Requires:       perl
 %endif
 %if 0%{?rhel_version} || 0%{?centos_version} || 0%{?fedora_version}
 Requires:       perl(ExtUtils::MakeMaker)
@@ -38,8 +39,8 @@ Requires:       perl(Test::More)
 %if 0%{?fedora}
 Requires:       perl-devel
 %endif
+Requires:       perl-macros
 %endif
-Requires:       perl
 
 
 %description
@@ -70,7 +71,6 @@ cp %{_sysconfdir}/rpm/macros.suse-perl %{_sysconfdir}/rpm/macros.perl
 %install
 # make sure it overwrites macros.perl if sorted alphabetically
 %{__install} -D -m644 macros.perl ${RPM_BUILD_ROOT}%{_sysconfdir}/rpm/macros.suse-perl
-
 
 %files
 %defattr(-,root,root)

@@ -1,6 +1,17 @@
---- macros.perl	2011-08-16 16:25:41.000000000 +0200
-+++ macros.suse-perl	2011-08-16 17:46:38.000000000 +0200
-@@ -65,24 +65,44 @@
+--- macros.perl	2025-02-02 15:09:44.066478801 +0100
++++ macros.suse-perl	2025-02-02 15:11:02.805749811 +0100
+@@ -5,10 +5,6 @@
+ #
+ %perl_sitearch   %(eval "`%{__perl} -V:installsitearch`"; echo $installsitearch)
+ %perl_sitelib    %(eval "`%{__perl} -V:installsitelib`"; echo $installsitelib)
+-%perl_vendorarch %(eval "`%{__perl} -V:installvendorarch`"; echo $installvendorarch)
+-%perl_vendorlib  %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)
+-%perl_archlib    %(eval "`%{__perl} -V:installarchlib`"; echo $installarchlib)
+-%perl_privlib    %(eval "`%{__perl} -V:installprivlib`"; echo $installprivlib)
+ 
+ # More useful perl macros (from Raul Dias <rsd@swi.com.br>)
+ #
+@@ -65,24 +61,44 @@
  EOF\
  }\
  # check for files in %{perl_vendorlib}\
@@ -52,7 +63,7 @@
  # build filelist\
  for i in ${all_dir[@]}; do\
    # do not add "dir {perl_vendorlib/arch}/auto", included in perl package\
-@@ -92,8 +112,8 @@
+@@ -92,8 +108,8 @@
    if [ "%{perl_vendorlib}/${i}" = "%{perl_vendorarch}/auto" ]; then\
      continue\
    else\
@@ -63,7 +74,7 @@
        if [ -n "$RES" ]; then\
          fgen_dir "%{perl_vendorlib}/${i}"\
          for file in $RES; do\
-@@ -103,12 +123,23 @@
+@@ -103,12 +119,23 @@
          fgen_dir "%{perl_vendorlib}/${i}"\
        fi\
      fi\
