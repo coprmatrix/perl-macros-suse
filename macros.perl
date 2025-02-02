@@ -65,7 +65,7 @@ ${1}\
 EOF\
 }\
 # check for files in %{perl_vendorlib}\
-RES=`find ${RPM_BUILD_ROOT}%{perl_vendorlib} -maxdepth 1 -type f`\
+RES=`find ${RPM_BUILD_ROOT}%{perl_vendorlib} -maxdepth 1 -type f || echo`\
 if [ -n "$RES" ]; then\
   for file in $RES; do\
     fgen_file "%{perl_vendorlib}/$(basename ${file})"\
@@ -93,7 +93,7 @@ for i in ${all_dir[@]}; do\
     continue\
   else\
     if [ -d ${base_dir}/${i} ]; then\
-      RES=`find "${base_dir}/${i}" -maxdepth 1 -type f`\
+      RES=`find "${base_dir}/${i}" -maxdepth 1 -type f || echo`\
       if [ -n "$RES" ]; then\
         fgen_dir "%{perl_vendorlib}/${i}"\
         for file in $RES; do\
@@ -119,7 +119,7 @@ fi\
 \
 # check for files in %{_bindir}\
 if [ -d ${RPM_BUILD_ROOT}%{_bindir} ]; then\
-  RES=`find "${RPM_BUILD_ROOT}%{_bindir}" -maxdepth 1 -type f`\
+  RES=`find "${RPM_BUILD_ROOT}%{_bindir}" -maxdepth 1 -type f || echo`\
   if [ -n "$RES" ]; then\
     for file in $RES; do\
       fgen_file "%{_bindir}/$(basename ${file})"\

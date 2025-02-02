@@ -15,10 +15,10 @@
  EOF\
  }\
  # check for files in %{perl_vendorlib}\
--RES=`find ${RPM_BUILD_ROOT}%{perl_vendorlib} -maxdepth 1 -type f`\
+-RES=`find ${RPM_BUILD_ROOT}%{perl_vendorlib} -maxdepth 1 -type f || echo`\
 -if [ -n "$RES" ]; then\
 -  for file in $RES; do\
-+RESl=`find ${RPM_BUILD_ROOT}%{perl_vendorlib} -maxdepth 1 -type f`\
++RESl=`find ${RPM_BUILD_ROOT}%{perl_vendorlib} -maxdepth 1 -type f || echo`\
 +if [ -n "$RESl" ]; then\
 +  for file in $RESl; do\
      fgen_file "%{perl_vendorlib}/$(basename ${file})"\
@@ -42,7 +42,7 @@
  \
 +# check for files in %{perl_vendorarch}\
 +if [ -d ${RPM_BUILD_ROOT}%{perl_vendorarch} ]; then\
-+  RESa=`find ${RPM_BUILD_ROOT}%{perl_vendorarch} -maxdepth 1 -type f`\
++  RESa=`find ${RPM_BUILD_ROOT}%{perl_vendorarch} -maxdepth 1 -type f || echo`\
 +  if [ -n "$RESa" ]; then\
 +    for file in $RESa; do\
 +      fgen_file "%{perl_vendorarch}/$(basename ${file})"\
@@ -68,9 +68,9 @@
      continue\
    else\
 -    if [ -d ${base_dir}/${i} ]; then\
--      RES=`find "${base_dir}/${i}" -maxdepth 1 -type f`\
+-      RES=`find "${base_dir}/${i}" -maxdepth 1 -type f || echo`\
 +    if [ -d ${base_dir_l}/${i} ]; then\
-+      RES=`find "${base_dir_l}/${i}" -maxdepth 1 -type f`\
++      RES=`find "${base_dir_l}/${i}" -maxdepth 1 -type f || echo`\
        if [ -n "$RES" ]; then\
          fgen_dir "%{perl_vendorlib}/${i}"\
          for file in $RES; do\
@@ -79,7 +79,7 @@
        fi\
      fi\
 +    if [ -d ${base_dir_a}/${i} ]; then\
-+      RES=`find "${base_dir_a}/${i}" -maxdepth 1 -type f`\
++      RES=`find "${base_dir_a}/${i}" -maxdepth 1 -type f || echo`\
 +      if [ -n "$RES" ]; then\
 +        fgen_dir "%{perl_vendorarch}/${i}"\
 +        for file in $RES; do\
