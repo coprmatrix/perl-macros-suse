@@ -20,7 +20,7 @@
 Name:           perl-macros-suse
 Summary:        Perl macros for rpm build
 Version:        1.0
-Release:        2
+Release:        3
 License:        GPL
 Group:          Development/Libraries/Perl
 Source0:        macros.perl
@@ -33,15 +33,16 @@ Provides:       perl-macros
 Conflicts:      perl-macros
 Requires:       perl
 %endif
-%if 0%{?rhel_version} || 0%{?centos_version} || 0%{?fedora_version}
+%if 0%{?rhel_version} || 0%{?centos_version} || 0%{?fedora_version} || 0%{fedora}
 Requires:       perl(ExtUtils::MakeMaker)
 Requires:       perl(Test::More)
 %if 0%{?fedora}
+%{?!fedora_version:%define fedora_version %{fedora}}
 Requires:       perl-devel
 %endif
 Requires:       perl-macros
 %endif
-
+%{?!_rpmmacrodir:%define _rpmmacrodir %_sysconfdir/rpm}
 
 %description
 This package provides perl rpm macros.
@@ -55,7 +56,7 @@ You need it for building perl modules
 %{__cp} %{S:0} .
 %{__cp} %{S:1} .
 %if 0%{?rhel_version} || 0%{?centos_version} || 0%{?fedora_version}
-%patch -P0 -p0
+patch < %{PATCH0}
 %endif
 
 %build
@@ -64,17 +65,17 @@ You need it for building perl modules
 %if %suse_version < 1140
 %post
 # most evil hack ever - rpm does not sort the macros, so we need to rename the old one
-cp %{_sysconfdir}/rpm/macros.suse-perl %{_sysconfdir}/rpm/macros.perl
+cp %{_rpmmacrodir}/macros.suse-perl %{_rpmmacrodir}/macros.perl
 %endif
 %endif
 
 %install
 # make sure it overwrites macros.perl if sorted alphabetically
-%{__install} -D -m644 macros.perl ${RPM_BUILD_ROOT}%{_sysconfdir}/rpm/macros.suse-perl
+%{__install} -D -m644 macros.perl ${RPM_BUILD_ROOT}%{_rpmmacrodir}/macros.suse_perl
 
 %files
 %defattr(-,root,root)
 %doc README
-%{_sysconfdir}/rpm/macros.*
+%{_rpmmacrodir}/macros.suse_perl
 
 %changelog
