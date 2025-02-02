@@ -1,0 +1,90 @@
+--- macros.perl	2011-08-16 16:25:41.000000000 +0200
++++ macros.suse-perl	2011-08-16 17:46:38.000000000 +0200
+@@ -65,24 +65,44 @@
+ EOF\
+ }\
+ # check for files in %{perl_vendorlib}\
+-RES=`find ${RPM_BUILD_ROOT}%{perl_vendorlib} -maxdepth 1 -type f`\
+-if [ -n "$RES" ]; then\
+-  for file in $RES; do\
++RESl=`find ${RPM_BUILD_ROOT}%{perl_vendorlib} -maxdepth 1 -type f`\
++if [ -n "$RESl" ]; then\
++  for file in $RESl; do\
+     fgen_file "%{perl_vendorlib}/$(basename ${file})"\
+   done\
+ fi\
+ \
+ # get all dirs into array\
+-base_dir="${RPM_BUILD_ROOT}%{perl_vendorlib}/"\
+-for dir in `find ${base_dir} -type d | sort`; do\
+-  if [ "$dir" = "${base_dir}" ]; then\
++base_dir_l="${RPM_BUILD_ROOT}%{perl_vendorlib}/"\
++for dir in `find ${base_dir_l} -type d | sort`; do\
++  if [ "$dir" = "${base_dir_l}" ]; then\
+     continue\
+   else\
+-    el=`echo $dir | %{__awk} -F"${base_dir}" '{print $2}'`\
++    el=`echo $dir | %{__awk} -F"${base_dir_l}" '{print $2}'`\
+     all_dir=(${all_dir[@]} $el)\
+   fi\
+ done\
+ \
++# check for files in %{perl_vendorarch}\
++if [ -d ${RPM_BUILD_ROOT}%{perl_vendorarch} ]; then\
++  RESa=`find ${RPM_BUILD_ROOT}%{perl_vendorarch} -maxdepth 1 -type f`\
++  if [ -n "$RESa" ]; then\
++    for file in $RESa; do\
++      fgen_file "%{perl_vendorarch}/$(basename ${file})"\
++    done\
++  fi\
++  # get all dirs into array\
++  base_dir_a="${RPM_BUILD_ROOT}%{perl_vendorarch}/"\
++  for dir in `find ${base_dir_a} -type d | sort`; do\
++    if [ "$dir" = "${base_dir_a}" ]; then\
++      continue\
++    else\
++      el=`echo $dir | %{__awk} -F"${base_dir_a}" '{print $2}'`\
++      all_dir=(${all_dir[@]} $el)\
++    fi\
++  done\
++fi\
++\
+ # build filelist\
+ for i in ${all_dir[@]}; do\
+   # do not add "dir {perl_vendorlib/arch}/auto", included in perl package\
+@@ -92,8 +112,8 @@
+   if [ "%{perl_vendorlib}/${i}" = "%{perl_vendorarch}/auto" ]; then\
+     continue\
+   else\
+-    if [ -d ${base_dir}/${i} ]; then\
+-      RES=`find "${base_dir}/${i}" -maxdepth 1 -type f`\
++    if [ -d ${base_dir_l}/${i} ]; then\
++      RES=`find "${base_dir_l}/${i}" -maxdepth 1 -type f`\
+       if [ -n "$RES" ]; then\
+         fgen_dir "%{perl_vendorlib}/${i}"\
+         for file in $RES; do\
+@@ -103,12 +123,23 @@
+         fgen_dir "%{perl_vendorlib}/${i}"\
+       fi\
+     fi\
++    if [ -d ${base_dir_a}/${i} ]; then\
++      RES=`find "${base_dir_a}/${i}" -maxdepth 1 -type f`\
++      if [ -n "$RES" ]; then\
++        fgen_dir "%{perl_vendorarch}/${i}"\
++        for file in $RES; do\
++          fgen_file "%{perl_vendorarch}/${i}/$(basename ${file})"\
++        done\
++      else\
++        fgen_dir "%{perl_vendorarch}/${i}"\
++      fi\
++    fi\
+   fi\
+ done\
+ # add man pages\
+ # if exist :)\
+ if [ -d "${RPM_BUILD_ROOT}%{_mandir}" ]; then\
+-fgen_file "%{_mandir}/man?/*"\
++  fgen_file "%{_mandir}/man?/*"\
+ fi\
+ \
+ # add packlist file\
